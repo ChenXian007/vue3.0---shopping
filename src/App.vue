@@ -1,15 +1,16 @@
 <template>
-<div class="container"></div>
+<router-view></router-view>
 </template>
 
 <script>
 
+// import { Request } from '@/utils/request'
 export default {
   setup (props) {
 
   }
 }
 </script>
-<style lang="less">
+<style >
 
 </style>
