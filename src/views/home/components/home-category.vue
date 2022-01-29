@@ -1,28 +1,59 @@
 <template>
-  <div class='home-category'>
+  <div class="home-category" @mouseleave="currCategoryId=null">
+    <!-- 侧边栏 -->
     <ul class="menu">
-      <li v-for="item in meunList" :key="item.id" @mouseenter="currCategoryId = item.id">
-        <RouterLink :to="`/category/${item.id}`">{{item.name}}</RouterLink>
-        <template v-if="item.children" >
-            <RouterLink :to="`/category/sub/${sub.id}`"
+      <li
+        v-for="item in meunList"
+        :key="item.id"
+        @mouseenter="currCategoryId = item.id"
+        :class="{ active: currCategoryId === item.id }"
+      >
+        <RouterLink :to="`/category/${item.id}`">{{ item.name }}</RouterLink>
+        <template v-if="item.children">
+          <RouterLink
+            :to="`/category/sub/${sub.id}`"
             v-for="sub in item.children"
-            :key="sub.id">{{sub.name}}
-            </RouterLink>
+            :key="sub.id"
+            >{{ sub.name }}</RouterLink>
+        </template>
+        <template v-else>
+          <XtxSkeleton width="60px" height="18px" style="margin-right:5px" bg="rgba(255,255,255,0.2)" animated = 'true' />
+          <XtxSkeleton width="60px" height="18px" bg="rgba(255,255,255,0.2)" animated = 'true' />
         </template>
       </li>
     </ul>
     <!-- 弹层 -->
-        <!-- 弹层 -->
+    <!-- 弹层 -->
     <div class="layer">
       <h4>分类推荐 <small>根据您的购买或浏览记录推荐</small></h4>
-      <ul v-if="currCategory && currCategory.goods && currCategory.goods.length">
+      <!-- 商品 -->
+      <ul
+        v-if="currCategory && currCategory.goods && currCategory.goods.length"
+      >
         <li v-for="item in currCategory.goods" :key="item.id">
           <RouterLink to="/">
-            <img :src="item.picture" alt="">
+            <img :src="item.picture" alt="" />
             <div class="info">
-              <p class="name ellipsis-2">{{item.name}}</p>
-              <p class="desc ellipsis">{{item.desc}}</p>
-              <p class="price"><i>¥</i>{{item.price}}</p>
+              <p class="name ellipsis-2">{{ item.name }}</p>
+              <p class="desc ellipsis">{{ item.desc }}</p>
+              <p class="price"><i>¥</i>{{ item.price }}</p>
+            </div>
+          </RouterLink>
+        </li>
+      </ul>
+      <!-- 品牌 -->
+      <ul
+        v-if="currCategory && currCategory.brands && currCategory.brands.length"
+      >
+        <li class="brand" v-for="brand in currCategory.brands" :key="brand.id">
+          <RouterLink to="/">
+            <img :src="brand.picture" alt="" />
+            <div class="info">
+              <p class="place">
+                <i class="iconfont icon-dingwei"></i>{{ brand.place }}
+              </p>
+              <p class="name ellipsis">{{ brand.name }}</p>
+              <p class="desc ellipsis-2">{{ brand.desc }}</p>
             </div>
           </RouterLink>
         </li>
@@ -34,6 +65,7 @@
 <script>
 import { computed, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
+import { findBrand } from '@/api/home'
 export default {
   name: 'HomeCategory',
   setup (props) {
@@ -41,11 +73,12 @@ export default {
     const brand = reactive({
       id: 'brand',
       name: '品牌',
-      children: [{ id: 'brand-chilren', name: '品牌推荐' }]
+      children: [{ id: 'brand-chilren', name: '品牌推荐' }],
+      brands: []
     })
 
     const meunList = computed(() => {
-      const list = store.state.category.list.map(item => {
+      const list = store.state.category.list.map((item) => {
         return {
           id: item.id,
           name: item.name,
@@ -60,7 +93,12 @@ export default {
     const currCategoryId = ref(null)
 
     const currCategory = computed(() => {
-      return meunList.value.find(item => item.id === currCategoryId.value)
+      return meunList.value.find((item) => item.id === currCategoryId.value)
+    })
+
+    // 品牌
+    findBrand().then((data) => {
+      brand.brands = data.result
     })
 
     return { meunList, currCategoryId, currCategory }
@@ -68,11 +106,11 @@ export default {
 }
 </script>
 
-<style scoped lang='less'>
+<style scoped lang="less">
 .home-category {
   width: 250px;
   height: 500px;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0, 0, 0, 0.8);
   position: relative;
   z-index: 99;
   .menu {
@@ -80,7 +118,8 @@ export default {
       padding-left: 40px;
       height: 50px;
       line-height: 50px;
-      &:hover {
+      &:hover,
+      &.active {
         background: @xtxColor;
       }
       a {
@@ -93,10 +132,10 @@ export default {
     }
   }
   //弹层样式
-   .layer {
+  .layer {
     width: 990px;
     height: 500px;
-    background: rgba(255,255,255,0.8);
+    background: rgba(255, 255, 255, 0.8);
     position: absolute;
     left: 250px;
     top: 0;
@@ -135,8 +174,8 @@ export default {
             background: #e3f9f4;
           }
           img {
-              width: 95px;
-              height: 95px;
+            width: 95px;
+            height: 95px;
           }
           .info {
             padding-left: 10px;
@@ -159,6 +198,25 @@ export default {
           }
         }
       }
+      //品牌
+      li.brand {
+        height: 180px;
+        a {
+          align-items: flex-start;
+          img {
+            width: 120px;
+            height: 160px;
+          }
+          .info {
+            p {
+              margin-top: 8px;
+            }
+            .place {
+              color: #999;
+            }
+          }
+        }
+      }
     }
   }
   &:hover {
@@ -166,5 +224,16 @@ export default {
       display: block;
     }
   }
+  .xtx-skeleton {
+  animation: fade 1s linear infinite alternate;
+}
+@keyframes fade {
+  from {
+    opacity: 0.2;
+  }
+  to {
+    opacity: 1;
+  }
+}
 }
 </style>
