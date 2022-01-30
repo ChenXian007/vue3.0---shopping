@@ -31,7 +31,5 @@ export default {
 </script>
 
 <style>
-.main{
-  height: 3000px;
-}
+
 </style>

@@ -11,3 +11,11 @@ export const findBrand = (limit = 6) => {
 export const findBanner = () => {
   return Request('/home/banner', 'get')
 }
+
+export const findNew = () => {
+  return Request('home/new', 'get')
+}
+
+export const findHot = () => {
+  return Request('home/hot', 'get')
+}
