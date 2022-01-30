@@ -32,6 +32,6 @@ export default {
 
 <style>
 .main{
-  height: 500px;
+  height: 3000px;
 }
 </style>
