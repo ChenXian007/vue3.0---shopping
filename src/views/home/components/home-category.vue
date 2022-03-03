@@ -24,7 +24,7 @@
     </ul>
     <!-- 弹层 -->
     <!-- 弹层 -->
-    <div class="layer">
+    <div class="layer" >
       <h4>分类推荐 <small>根据您的购买或浏览记录推荐</small></h4>
       <!-- 商品 -->
       <ul
