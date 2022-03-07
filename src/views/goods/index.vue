@@ -16,21 +16,26 @@
         </div>
         <div class="spec">
             <GoodsName :goods="goods" />
-            <GoodsSku :goods="goods" skuid = '1704017' @change="changeSku"/>
+            <GoodsSku :goods="goods"  @change="changeSku"/>
+            <XtxNumbox v-model:num="num" :max='goods.inventory' @change='changefn' :label="'数量'"/>
+            <xtx-button :type="'primary'" style="margin-top:20px" >加入购物车</xtx-button>
         </div>
       </div>
       <!-- 商品推荐 -->
-      <GoodsRelevant  />
+      <GoodsRelevant :id="goods.id"  />
       <!-- 商品详情 -->
       <div class="goods-footer">
         <div class="goods-article">
           <!-- 商品+评价 -->
-          <div class="goods-tabs"></div>
+          <GoodsTabs />
           <!-- 注意事项 -->
           <div class="goods-warn"></div>
         </div>
         <!-- 24热榜+专题推荐 -->
-        <div class="goods-aside"></div>
+        <div class="goods-aside">
+          <GoodsHot :type="1" />
+          <GoodsHot :type="2" />
+        </div>
       </div>
     </div>
   </div>
@@ -42,9 +47,13 @@ import GoodsImage from './components/goods-image.vue'
 import GoodsSales from './components/goods-sales.vue'
 import GoodsName from './components/goods-name.vue'
 import GoodsSku from './components/goods-sku.vue'
+import GoodsTabs from './components/goods-tabs.vue'
+import GoodsHot from './components/goods-hot.vue'
 import { findGoods } from '@/api/product'
-import { nextTick, ref, watch } from 'vue'
+import { nextTick, provide, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import XtxNumbox from '@/components/library/xtx-numbox.vue'
+import XtxButton from '@/components/library/xtx-button.vue'
 export default {
   name: 'XtxGoodsPage',
   setup (props, { emit }) {
@@ -56,9 +65,15 @@ export default {
         goods.value.inventory = sku.inventory
       }
     }
-    return { goods, changeSku }
+
+    const changefn = (nv) => {
+      console.log(nv, num.value)
+    }
+    provide('goods', goods)
+    const num = ref(1)
+    return { goods, changeSku, num, changefn }
   },
-  components: { GoodsRelevant, GoodsImage, GoodsSales, GoodsName, GoodsSku }
+  components: { GoodsRelevant, GoodsImage, GoodsSales, GoodsName, GoodsSku, XtxNumbox, XtxButton, GoodsTabs, GoodsHot }
 }
 const useGoods = () => {
   const goods = ref(null)

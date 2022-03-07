@@ -113,7 +113,10 @@ export default {
   },
   setup (props, { emit }) {
     const pathMap = getPathMap(props.goods.skus)
-    initSelectedStatu(props.goods, props.skuid)
+    if (props.skuid) {
+      initSelectedStatu(props.goods, props.skuid)
+    }
+
     updateDisabledStatus(props.goods.specs, pathMap)
 
     const changeSku = (val, item) => {

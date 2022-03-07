@@ -1,16 +1,41 @@
 <template>
-  <div class='xtx-carousel' @mouseenter="stop()" @mouseleave="start()">
+  <div class="xtx-carousel" @mouseenter="stop()" @mouseleave="start()">
     <ul class="carousel-body">
-      <li class="carousel-item" v-for="(item, i) in sliders" :key="i" :class="{fade: index === i}">
-        <RouterLink to="/">
-          <img :src="item.imgUrl" alt="">
+      <li
+        class="carousel-item"
+        v-for="(item, i) in sliders"
+        :key="i"
+        :class="{ fade: index === i }"
+      >
+        <RouterLink v-if="item.imgUrl" to="/">
+          <img :src="item.imgUrl" alt="" />
         </RouterLink>
+        <div v-else class="slider">
+          <RouterLink
+            v-for="goods in item"
+            :key="goods.id"
+            :to="`/product/${goods.id}`"
+          >
+            <img :src="goods.picture" alt="" />
+            <p class="name ellipsis">{{ goods.name }}</p>
+            <p class="price">&yen;{{ goods.price }}</p>
+          </RouterLink>
+        </div>
       </li>
     </ul>
-    <a href="javascript:;" class="carousel-btn prev"><i class="iconfont icon-angle-left" @click="toggle(-1)"></i></a>
-    <a href="javascript:;" class="carousel-btn next"><i class="iconfont icon-angle-right" @click="toggle(1)"></i></a>
+    <a href="javascript:;" class="carousel-btn prev"
+      ><i class="iconfont icon-angle-left" @click="toggle(-1)"></i
+    ></a>
+    <a href="javascript:;" class="carousel-btn next"
+      ><i class="iconfont icon-angle-right" @click="toggle(1)"></i
+    ></a>
     <div class="carousel-indicator">
-      <span v-for="(item,i) in sliders" :key="i" :class="{active:index === i}" @click="index = i"></span>
+      <span
+        v-for="(item, i) in sliders"
+        :key="i"
+        :class="{ active: index === i }"
+        @click="index = i"
+      ></span>
     </div>
   </div>
 </template>
@@ -50,11 +75,15 @@ export default {
       }, props.duration)
     }
 
-    watch(() => props.sliders, (newValue) => {
-      if (newValue.length && props.autoPlay) {
-        autoplay()
-      }
-    }, { immediate: true })
+    watch(
+      () => props.sliders,
+      (newValue) => {
+        if (newValue.length && props.autoPlay) {
+          autoplay()
+        }
+      },
+      { immediate: true }
+    )
 
     // 2.鼠标进入，鼠标推出
     // 鼠标进入停止，移出开启自动，前提条件：autoPlay为true
@@ -90,13 +119,13 @@ export default {
 }
 </script>
 <style scoped lang="less">
-.xtx-carousel{
+.xtx-carousel {
   width: 100%;
   height: 100%;
   min-width: 300px;
   min-height: 150px;
   position: relative;
-  .carousel{
+  .carousel {
     &-body {
       width: 100%;
       height: 100%;
@@ -129,21 +158,21 @@ export default {
         display: inline-block;
         width: 12px;
         height: 12px;
-        background: rgba(0,0,0,0.2);
+        background: rgba(0, 0, 0, 0.2);
         border-radius: 50%;
         cursor: pointer;
         ~ span {
           margin-left: 12px;
         }
         &.active {
-          background:  #fff;
+          background: #fff;
         }
       }
     }
     &-btn {
       width: 44px;
       height: 44px;
-      background: rgba(0,0,0,.2);
+      background: rgba(0, 0, 0, 0.2);
       color: #fff;
       border-radius: 50%;
       position: absolute;
@@ -153,10 +182,10 @@ export default {
       line-height: 44px;
       opacity: 0;
       transition: all 0.5s;
-      &.prev{
+      &.prev {
         left: 20px;
       }
-      &.next{
+      &.next {
         right: 20px;
       }
     }
@@ -164,6 +193,31 @@ export default {
   &:hover {
     .carousel-btn {
       opacity: 1;
+    }
+  }
+}
+// 轮播商品
+.slider {
+  display: flex;
+  justify-content: space-around;
+  padding: 0 40px;
+  > a {
+    width: 240px;
+    text-align: center;
+    img {
+      padding: 20px;
+      width: 230px!important;
+      height: 230px!important;
+    }
+    .name {
+      font-size: 16px;
+      color: #666;
+      padding: 0 40px;
+    }
+    .price {
+      font-size: 16px;
+      color: @priceColor;
+      margin-top: 15px;
     }
   }
 }
