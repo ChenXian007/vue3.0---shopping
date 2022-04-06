@@ -60,15 +60,10 @@ export default {
         end,
         btnArr
       }
-    }
+    })
 
-    )
     watch(props, () => {
       myCurrengPage.value = props.currengPage
-
-      myTotal.value = props.total // ...
-      myPageSize.value = props.pageSize // ...
-      console.log(myTotal.value, myPageSize.value)
     }, { immediate: true })
 
     const changePage = (page) => {

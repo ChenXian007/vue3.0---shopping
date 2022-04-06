@@ -38,8 +38,8 @@ request.interceptors.response.use(res => res.data,
       // js模块中：router.currentRoute.value.fullPath 就是当前路由地址，router.currentRoute 是ref响应式数据
       const fullpath = encodeURIComponent(router.currentRoute.value.fullPath)
       router.push(`/login?redirectUrl=${fullpath}`)
-      return Promise.reject(err)
     }
+    return Promise.reject(err)
   })
 
 export const Request = (url, method, submitData) => {

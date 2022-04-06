@@ -9,13 +9,16 @@ export default {
         account: '',
         mobile: '',
         token: ''
-      }
+      },
+      redirectUrl: '/'
     }
   },
   mutations: {
     setUser (state, pl) {
       state.profile = pl
-      console.log(state)
+    },
+    setUrl (state, url) {
+      state.redirectUrl = url
     }
   }
 }

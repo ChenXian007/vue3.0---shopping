@@ -4,7 +4,7 @@
 // import XtxBreadItem from './xtx-bread-item.vue'
 // import XtxBread from './xtx.bread.vue'
 import defaultImg from '@/assets/images/200.png'
-
+import Message from '@/components/library/message'
 const importFn = require.context('./', false, /\.vue$/)
 
 export default {
@@ -24,6 +24,7 @@ export default {
       app.component(component.name, component)
     })
     useLazyLoad(app)
+    app.config.globalProperties.$message = Message
   }
 }
 
