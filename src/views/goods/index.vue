@@ -18,7 +18,7 @@
             <GoodsName :goods="goods" />
             <GoodsSku :goods="goods"  @change="changeSku"/>
             <XtxNumbox v-model:num="num" :max='goods.inventory' @change='changefn' :label="'数量'"/>
-            <xtx-button :type="'primary'" style="margin-top:20px" >加入购物车</xtx-button>
+            <xtx-button :type="'primary'" style="margin-top:20px" @click="insertCart" >加入购物车</xtx-button>
         </div>
       </div>
       <!-- 商品推荐 -->
@@ -54,9 +54,12 @@ import { nextTick, provide, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import XtxNumbox from '@/components/library/xtx-numbox.vue'
 import XtxButton from '@/components/library/xtx-button.vue'
+import { useStore } from 'vuex'
+import Message from '@/components/library/message'
 export default {
   name: 'XtxGoodsPage',
   setup (props, { emit }) {
+    const store = useStore()
     const goods = useGoods()
     const changeSku = (sku) => {
       if (sku.skuId) {
@@ -64,14 +67,40 @@ export default {
         goods.value.oldPrice = sku.oldPrice
         goods.value.inventory = sku.inventory
       }
+      currSku.value = sku
     }
 
     const changefn = (nv) => {
       console.log(nv, num.value)
     }
+    const currSku = ref(null)
+
+    const insertCart = () => {
+      if (currSku.value.skuId) {
+        const { skuId, inventory: stock, specsText: attrsText, price: nowPrice } = currSku.value
+        const { id, name, price, mainPictures } = goods.value
+        store.dispatch('cart/insertCart', {
+          skuId,
+          stock,
+          attrsText,
+          id,
+          name,
+          price,
+          nowPrice,
+          picture: mainPictures[0],
+          selected: true,
+          isEffective: true,
+          count: num.value
+        }).then(() => {
+          Message({ type: 'success', text: '添加购物车成功' })
+        })
+      } else {
+        Message({ text: '请选择完整规格' })
+      }
+    }
     provide('goods', goods)
     const num = ref(1)
-    return { goods, changeSku, num, changefn }
+    return { goods, changeSku, num, changefn, insertCart }
   },
   components: { GoodsRelevant, GoodsImage, GoodsSales, GoodsName, GoodsSku, XtxNumbox, XtxButton, GoodsTabs, GoodsHot }
 }

@@ -176,11 +176,13 @@ export default {
             token,
             mobile
           })
-
-          // 2. 跳转
-          router.push(route.query.redirectUrl || '/')
-          // 3. 提示
-          Message({ type: 'success', text: '登录成功' })
+          // 合并购物车
+          store.dispatch('cart/mergeLocalCart').then(() => {
+            // 2. 跳转
+            router.push(route.query.redirectUrl || '/')
+            // 3. 提示
+            Message({ type: 'success', text: '登录成功' })
+          })
         } catch (e) {
           // 失败提示
           if (e.response.data) {

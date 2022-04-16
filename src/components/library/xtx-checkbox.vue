@@ -7,9 +7,9 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 export default {
-  name: 'xtx-checkbox',
+  name: 'XtxCheckbox',
   props: {
     modelValue: {
       type: Boolean,
@@ -23,6 +23,9 @@ export default {
       emit('update:modelValue', checked.value)
       emit('change', checked.value)
     }
+    watch(() => props.modelValue, () => {
+      checked.value = props.modelValue
+    }, { immediate: true })
     return { checked, changeChecked }
   }
 }

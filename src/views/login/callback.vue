@@ -71,11 +71,13 @@ export default {
             token,
             mobile
           })
-          // 2. 跳转
-          const path = store.state.user.redirectUrl
-          router.push(path)
-          // 3. 提示
-          Message({ type: 'success', text: '登录成功' })
+          store.dispatch('cart/mergeLocalCart').then(() => {
+            // 2. 跳转
+            const path = store.state.user.redirectUrl
+            router.push(path)
+            // 3. 提示
+            Message({ type: 'success', text: 'QQ登录成功' })
+          })
         }).catch(e => {
           isBind.value = false
         })

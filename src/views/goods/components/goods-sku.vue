@@ -48,6 +48,7 @@ const getPathMap = (skus) => {
   })
   return pathMap
 }
+
 const getArr = (specs) => {
   const selectedArr = []
   specs.forEach((item) => {
@@ -77,6 +78,7 @@ const updateDisabledStatus = (specs, pathMap) => {
 
 const initSelectedStatu = (goods, skuid) => {
   const sku = goods.skus.find(p => p.id === skuid).specs
+  //
   goods.specs.forEach((item, i) => {
     const val = item.values.find(p => p.name === sku[i].valueName)
     val.selected = true
@@ -114,6 +116,7 @@ export default {
   setup (props, { emit }) {
     const pathMap = getPathMap(props.goods.skus)
     if (props.skuid) {
+      console.log(props.goods, props.skuid)
       initSelectedStatu(props.goods, props.skuid)
     }
 
